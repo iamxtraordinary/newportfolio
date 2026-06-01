@@ -135,7 +135,7 @@ function ScrollCounter() {
 /* ─── Scene 2: About Teaser ─── */
 function AboutTeaser() {
   const navigate = useNavigate()
-  const [photoExpanded, setPhotoExpanded] = useState(false)
+  const [photosExpanded, setPhotosExpanded] = useState(false)
 
   const stats = [
     { value: '2+', label: 'Years of Experience' },
@@ -145,7 +145,7 @@ function AboutTeaser() {
 
   return (
     <section className="relative py-24 md:py-32 px-8 md:px-16 max-w-7xl mx-auto">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-24 items-center">
+      <div className="grid grid-cols-1 md:grid-cols-[1fr_1.4fr] gap-16 md:gap-12 items-center">
         {/* Left: Text */}
         <motion.div
           initial={{ opacity: 0, x: -40 }}
@@ -153,7 +153,7 @@ function AboutTeaser() {
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
-          <h2 className="font-[family-name:var(--font-display)] text-5xl md:text-6xl font-bold uppercase tracking-tight mb-6">
+          <h2 className="font-[family-name:var(--font-display)] text-5xl md:text-6xl font-bold uppercase tracking-tight mb-6 text-[#C8B88A]">
             Hello there
             <motion.span
               className="inline-block w-3 h-3 bg-[var(--color-accent)] rounded-full ml-2 align-middle"
@@ -191,106 +191,96 @@ function AboutTeaser() {
           </motion.button>
         </motion.div>
 
-        {/* Right: Photo Stack */}
+        {/* Right: Portrait Card & Photo Stack */}
         <motion.div
-          className="relative flex justify-center"
+          className="relative flex justify-end items-center min-h-[400px] md:min-h-[520px]"
           initial={{ opacity: 0, x: 40 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
         >
-          <div
-            className="relative cursor-pointer group"
-            onClick={() => setPhotoExpanded(true)}
+          {/* Extra Photo 1 — Dangote (fanning out to the left from behind) */}
+          <AnimatePresence>
+            {photosExpanded && (
+              <motion.div
+                className="absolute z-[5] rounded-[1.5rem] overflow-hidden w-44 md:w-56 aspect-[3/4] shadow-2xl cursor-grab active:cursor-grabbing"
+                initial={{ x: 0, y: 0, rotate: 0, scale: 0.8, opacity: 0 }}
+                animate={{ x: -280, y: -40, rotate: -12, scale: 0.85, opacity: 1 }}
+                exit={{ x: 0, y: 0, rotate: 0, scale: 0.8, opacity: 0 }}
+                transition={{ type: 'spring', stiffness: 200, damping: 22, delay: 0.05 }}
+                drag
+                dragMomentum={true}
+                dragElastic={0.6}
+                whileHover={{ scale: 0.9 }}
+                whileDrag={{ scale: 1.0, rotate: 0, zIndex: 100 }}
+              >
+                <img
+                  src="/dangote.webp"
+                  alt="Photo of Emmanuel"
+                  className="w-full h-full object-cover pointer-events-none"
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Extra Photo 2 — Car (fanning out to the right from behind) */}
+          <AnimatePresence>
+            {photosExpanded && (
+              <motion.div
+                className="absolute z-[5] rounded-[1.5rem] overflow-hidden w-44 md:w-56 aspect-[3/4] shadow-2xl cursor-grab active:cursor-grabbing"
+                initial={{ x: 0, y: 0, rotate: 0, scale: 0.8, opacity: 0 }}
+                animate={{ x: 60, y: 80, rotate: 10, scale: 0.85, opacity: 1 }}
+                exit={{ x: 0, y: 0, rotate: 0, scale: 0.8, opacity: 0 }}
+                transition={{ type: 'spring', stiffness: 200, damping: 22, delay: 0.1 }}
+                drag
+                dragMomentum={true}
+                dragElastic={0.6}
+                whileHover={{ scale: 0.9 }}
+                whileDrag={{ scale: 1.0, rotate: 0, zIndex: 100 }}
+              >
+                <img
+                  src="/car.webp"
+                  alt="Photo of Emmanuel"
+                  className="w-full h-full object-cover pointer-events-none"
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Main Portrait Card — slanted, elevated slightly when expanded */}
+          <motion.div
+            className="relative z-10 cursor-pointer group"
+            onClick={() => setPhotosExpanded(!photosExpanded)}
+            animate={photosExpanded
+              ? { scale: 1.03, rotate: 0 }
+              : { scale: 1, rotate: -3 }
+            }
+            transition={{ type: 'spring', stiffness: 200, damping: 20 }}
           >
-            {/* Decorative accent ring */}
+            {/* Accent Ring */}
             <div
               className="absolute -inset-3 rounded-[2.5rem] border border-[var(--color-accent)]/20 pointer-events-none"
               aria-hidden="true"
             />
-            {/* Main photo */}
-            <div className="relative rounded-[1.5rem] md:rounded-[2rem] overflow-hidden aspect-[3/4] w-64 md:w-80">
+            {/* Frame */}
+            <div className="relative rounded-[1.5rem] md:rounded-[2rem] overflow-hidden aspect-[3/4] w-72 md:w-[420px] shadow-2xl bg-[var(--color-bg)]">
               <img
                 src="/Me.webp"
                 alt="Emmanuel Okaka"
-                className="w-full h-full object-cover"
-                width={320}
-                height={427}
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                width={420}
+                height={560}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-bg)]/40 to-transparent" />
+              {/* Hover gradient */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             </div>
-            {/* Tap hint */}
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <span className="micro-label text-white bg-black/50 px-4 py-2 rounded-full backdrop-blur-sm">
-                Tap me
+            {/* Tap hint capsule */}
+            <div className="absolute bottom-6 left-0 right-0 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 translate-y-2 group-hover:translate-y-0">
+              <span className="micro-label text-white bg-black/60 px-5 py-2 rounded-full backdrop-blur-sm">
+                {photosExpanded ? 'Tap to close' : 'Tap me'}
               </span>
             </div>
-          </div>
-
-          {/* Expanded overlay */}
-          <AnimatePresence>
-            {photoExpanded && (
-              <motion.div
-                className="fixed inset-0 z-[1500] flex items-center justify-center bg-black/70 backdrop-blur-sm"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                onClick={() => setPhotoExpanded(false)}
-              >
-                {/* Main photo elevated */}
-                <motion.div
-                  className="relative z-10 rounded-[2rem] overflow-hidden w-72 md:w-96 aspect-[3/4] shadow-2xl"
-                  initial={{ scale: 0.8 }}
-                  animate={{ scale: 1 }}
-                  exit={{ scale: 0.8 }}
-                  transition={{ type: 'spring', stiffness: 200, damping: 20 }}
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <img
-                    src="/Me.webp"
-                    alt="Emmanuel Okaka"
-                    className="w-full h-full object-cover"
-                  />
-                </motion.div>
-
-                {/* Extra photo 1 */}
-                <motion.div
-                  className="absolute z-20 rounded-xl overflow-hidden w-40 md:w-56 aspect-[4/3] shadow-xl cursor-grab active:cursor-grabbing"
-                  initial={{ x: -100, y: 80, rotate: -15, scale: 0 }}
-                  animate={{ x: -220, y: 60, rotate: -12, scale: 1 }}
-                  exit={{ scale: 0 }}
-                  transition={{ type: 'spring', stiffness: 200, damping: 20, delay: 0.1 }}
-                  drag
-                  dragMomentum
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <img
-                    src="/dangote.webp"
-                    alt="Photo of Emmanuel"
-                    className="w-full h-full object-cover"
-                  />
-                </motion.div>
-
-                {/* Extra photo 2 */}
-                <motion.div
-                  className="absolute z-20 rounded-xl overflow-hidden w-40 md:w-56 aspect-[4/3] shadow-xl cursor-grab active:cursor-grabbing"
-                  initial={{ x: 100, y: -80, rotate: 15, scale: 0 }}
-                  animate={{ x: 200, y: -50, rotate: 8, scale: 1 }}
-                  exit={{ scale: 0 }}
-                  transition={{ type: 'spring', stiffness: 200, damping: 20, delay: 0.15 }}
-                  drag
-                  dragMomentum
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <img
-                    src="/car.webp"
-                    alt="Photo of Emmanuel"
-                    className="w-full h-full object-cover"
-                  />
-                </motion.div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+          </motion.div>
         </motion.div>
       </div>
     </section>
@@ -439,7 +429,7 @@ export default function Cinematic() {
       <ScrollCounter />
 
       {/* ─── Scene 1: Hero ─── */}
-      <section ref={heroRef} className="relative h-[200vh]">
+      <section ref={heroRef} className="relative h-[130vh]">
         <div className="sticky top-0 h-screen flex flex-col items-center justify-center overflow-hidden">
           {/* Radial spotlight */}
           <motion.div
