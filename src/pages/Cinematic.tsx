@@ -1,0 +1,483 @@
+import { useRef, useState } from 'react'
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useSpring,
+  useMotionValueEvent,
+  AnimatePresence,
+} from 'motion/react'
+import { useNavigate } from 'react-router-dom'
+import { ArrowRight } from 'lucide-react'
+
+import { projects } from '../data/projects'
+import { ScrambleText } from '../components/shared/ScrambleText'
+import { MagneticButton } from '../components/shared/MagneticButton'
+import { PeelCard } from '../components/shared/PeelCard'
+import { PageTransition } from '../components/layout/PageTransition'
+
+/* ─── Hero Name Letter Animation ─── */
+function AnimatedName() {
+  const firstName = 'Emmanuel'
+  const lastName = 'Okaka'
+
+  const renderLetters = (word: string, offset: number) =>
+    word.split('').map((letter, i) => (
+      <span key={`${word}-${i}`} className="inline-block overflow-hidden">
+        <motion.span
+          className="inline-block"
+          initial={{ y: '110%', rotate: 12, opacity: 0 }}
+          animate={{ y: '0%', rotate: 0, opacity: 1 }}
+          transition={{
+            duration: 0.8,
+            delay: 0.1 + (offset + i) * 0.035,
+            ease: [0.16, 1, 0.3, 1],
+          }}
+        >
+          {letter}
+        </motion.span>
+      </span>
+    ))
+
+  return (
+    <h1
+      className="font-[family-name:var(--font-display)] font-bold uppercase leading-[0.8] tracking-tighter text-[16vw] md:text-[12vw] lg:text-[10vw]"
+      aria-label="Emmanuel Okaka"
+    >
+      <span className="block">{renderLetters(firstName, 0)}</span>
+      <span className="block">{renderLetters(lastName, firstName.length)}</span>
+    </h1>
+  )
+}
+
+/* ─── Available Badge ─── */
+function AvailableBadge() {
+  return (
+    <motion.div
+      className="absolute -top-4 right-[5%] md:right-[10%]"
+      initial={{ scale: 0, rotate: -10 }}
+      animate={{ scale: 1, rotate: -3 }}
+      transition={{
+        type: 'spring',
+        stiffness: 200,
+        damping: 20,
+        delay: 1.2,
+      }}
+    >
+      <motion.div
+        className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.06] border border-white/[0.1] backdrop-blur-md"
+        animate={{ y: [0, -8, 0], rotate: [0, 4, 0] }}
+        transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+      >
+        <span className="relative flex h-2 w-2">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+          <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
+        </span>
+        <span className="micro-label text-[var(--color-muted)]">
+          Available for work
+        </span>
+      </motion.div>
+    </motion.div>
+  )
+}
+
+/* ─── Scroll Progress Counter ─── */
+function ScrollCounter() {
+  const { scrollYProgress } = useScroll()
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+  })
+  const [percent, setPercent] = useState(0)
+
+  useMotionValueEvent(smoothProgress, 'change', (v) => {
+    setPercent(Math.round(v * 100))
+  })
+
+  return (
+    <motion.div
+      className="fixed bottom-8 right-8 z-50 micro-label text-[var(--color-accent)] tracking-[0.3em]"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: 1.5 }}
+    >
+      [ {String(percent).padStart(2, '0')}% ]
+    </motion.div>
+  )
+}
+
+/* ─── Scene 2: About Teaser ─── */
+function AboutTeaser() {
+  const navigate = useNavigate()
+  const [photoExpanded, setPhotoExpanded] = useState(false)
+
+  const stats = [
+    { value: '2+', label: 'Years of Experience' },
+    { value: '4', label: 'Completed Projects' },
+    { value: '5+', label: 'Clients Worldwide' },
+  ]
+
+  return (
+    <section className="relative py-24 md:py-32 px-8 md:px-16 max-w-7xl mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-24 items-center">
+        {/* Left: Text */}
+        <motion.div
+          initial={{ opacity: 0, x: -40 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <h2 className="font-[family-name:var(--font-display)] text-5xl md:text-6xl font-bold uppercase tracking-tight mb-6">
+            Hello there
+            <motion.span
+              className="inline-block w-3 h-3 bg-[var(--color-accent)] rounded-full ml-2 align-middle"
+              animate={{ opacity: [1, 0.3, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
+              aria-hidden="true"
+            />
+          </h2>
+          <p className="text-lg text-[var(--color-muted)] leading-relaxed mb-10 max-w-lg">
+            I'm Emmanuel, a software developer passionate about crafting
+            meaningful and impactful services. Let's work together.
+          </p>
+
+          {/* Stats */}
+          <div className="flex gap-8 mb-10">
+            {stats.map((stat) => (
+              <div key={stat.label}>
+                <span className="font-[family-name:var(--font-display)] text-3xl md:text-4xl font-bold text-[var(--color-accent)]">
+                  {stat.value}
+                </span>
+                <span className="block micro-label text-[var(--color-muted)] mt-1 max-w-[80px]">
+                  {stat.label}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          <motion.button
+            onClick={() => navigate('/about')}
+            className="px-8 py-3 rounded-full border border-[var(--color-accent)] text-[var(--color-accent)] micro-label hover:bg-[var(--color-accent)] hover:text-[var(--color-bg)] transition-all duration-300"
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+          >
+            About Me
+          </motion.button>
+        </motion.div>
+
+        {/* Right: Photo Stack */}
+        <motion.div
+          className="relative flex justify-center"
+          initial={{ opacity: 0, x: 40 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+        >
+          <div
+            className="relative cursor-pointer group"
+            onClick={() => setPhotoExpanded(true)}
+          >
+            {/* Decorative accent ring */}
+            <div
+              className="absolute -inset-3 rounded-[2.5rem] border border-[var(--color-accent)]/20 pointer-events-none"
+              aria-hidden="true"
+            />
+            {/* Main photo */}
+            <div className="relative rounded-[1.5rem] md:rounded-[2rem] overflow-hidden aspect-[3/4] w-64 md:w-80">
+              <img
+                src="/Me.webp"
+                alt="Emmanuel Okaka"
+                className="w-full h-full object-cover"
+                width={320}
+                height={427}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-bg)]/40 to-transparent" />
+            </div>
+            {/* Tap hint */}
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <span className="micro-label text-white bg-black/50 px-4 py-2 rounded-full backdrop-blur-sm">
+                Tap me
+              </span>
+            </div>
+          </div>
+
+          {/* Expanded overlay */}
+          <AnimatePresence>
+            {photoExpanded && (
+              <motion.div
+                className="fixed inset-0 z-[1500] flex items-center justify-center bg-black/70 backdrop-blur-sm"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setPhotoExpanded(false)}
+              >
+                {/* Main photo elevated */}
+                <motion.div
+                  className="relative z-10 rounded-[2rem] overflow-hidden w-72 md:w-96 aspect-[3/4] shadow-2xl"
+                  initial={{ scale: 0.8 }}
+                  animate={{ scale: 1 }}
+                  exit={{ scale: 0.8 }}
+                  transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <img
+                    src="/Me.webp"
+                    alt="Emmanuel Okaka"
+                    className="w-full h-full object-cover"
+                  />
+                </motion.div>
+
+                {/* Extra photo 1 */}
+                <motion.div
+                  className="absolute z-20 rounded-xl overflow-hidden w-40 md:w-56 aspect-[4/3] shadow-xl cursor-grab active:cursor-grabbing"
+                  initial={{ x: -100, y: 80, rotate: -15, scale: 0 }}
+                  animate={{ x: -220, y: 60, rotate: -12, scale: 1 }}
+                  exit={{ scale: 0 }}
+                  transition={{ type: 'spring', stiffness: 200, damping: 20, delay: 0.1 }}
+                  drag
+                  dragMomentum
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <img
+                    src="/dangote.webp"
+                    alt="Photo of Emmanuel"
+                    className="w-full h-full object-cover"
+                  />
+                </motion.div>
+
+                {/* Extra photo 2 */}
+                <motion.div
+                  className="absolute z-20 rounded-xl overflow-hidden w-40 md:w-56 aspect-[4/3] shadow-xl cursor-grab active:cursor-grabbing"
+                  initial={{ x: 100, y: -80, rotate: 15, scale: 0 }}
+                  animate={{ x: 200, y: -50, rotate: 8, scale: 1 }}
+                  exit={{ scale: 0 }}
+                  transition={{ type: 'spring', stiffness: 200, damping: 20, delay: 0.15 }}
+                  drag
+                  dragMomentum
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <img
+                    src="/car.webp"
+                    alt="Photo of Emmanuel"
+                    className="w-full h-full object-cover"
+                  />
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
+      </div>
+    </section>
+  )
+}
+
+/* ─── Scene 3: Stacked Peel Gallery ─── */
+function PeelGallery() {
+  const navigate = useNavigate()
+
+  return (
+    <section className="relative">
+      {/* Sticky header */}
+      <div className="sticky top-6 left-0 z-30 px-8 md:px-16 mb-8 pointer-events-none">
+        <div className="flex items-center gap-4">
+          <span className="font-[family-name:var(--font-display)] text-sm uppercase tracking-wider text-[var(--color-muted)]">
+            Selected Work
+          </span>
+          <div className="h-px w-12 bg-[var(--color-border)]" aria-hidden="true" />
+          <span className="micro-label px-3 py-1 rounded-full bg-[var(--color-accent)]/10 text-[var(--color-accent)]">
+            {projects.length}
+          </span>
+        </div>
+      </div>
+
+      {/* Cards */}
+      {projects.map((project, i) => (
+        <PeelCard
+          key={project.id}
+          project={project}
+          index={i}
+          total={projects.length}
+        />
+      ))}
+
+      {/* View All Projects button */}
+      <div className="flex justify-center py-24">
+        <motion.button
+          onClick={() => navigate('/projects')}
+          className="group flex items-center gap-3 px-10 py-4 rounded-full border border-[var(--color-border)] hover:border-[var(--color-accent)] transition-colors duration-300"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          <span className="font-[family-name:var(--font-display)] text-sm uppercase tracking-wider">
+            View All Projects
+          </span>
+          <ArrowRight
+            size={16}
+            className="transition-transform duration-300 group-hover:translate-x-1"
+          />
+        </motion.button>
+      </div>
+    </section>
+  )
+}
+
+/* ─── Scene 4: CTA ─── */
+function CTASection() {
+  const navigate = useNavigate()
+  const words = ['Let\'s', 'build', 'something']
+
+  return (
+    <section className="relative h-screen flex flex-col items-center justify-center px-8">
+      {/* Ambient glow */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            'radial-gradient(ellipse 50% 40% at 50% 50%, var(--color-accent-glow), transparent 70%)',
+        }}
+        aria-hidden="true"
+      />
+
+      <div className="relative text-center">
+        <h2 className="font-[family-name:var(--font-display)] text-5xl md:text-7xl lg:text-8xl font-bold uppercase tracking-tight leading-[0.9]">
+          {words.map((word, i) => (
+            <motion.span
+              key={word}
+              className="inline-block mr-[0.3em]"
+              initial={{ opacity: 0, y: 30, filter: 'blur(10px)' }}
+              whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              viewport={{ once: true }}
+              transition={{
+                duration: 0.6,
+                delay: 0.15 * i,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+            >
+              {word}
+            </motion.span>
+          ))}
+          <br />
+          <motion.span
+            className="inline-block text-[var(--color-accent)]"
+            initial={{ opacity: 0, y: 40, filter: 'blur(16px)', scale: 0.9, rotate: -2 }}
+            whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)', scale: 1, rotate: 0 }}
+            viewport={{ once: true }}
+            transition={{
+              duration: 0.8,
+              delay: 0.55,
+              ease: [0.16, 1, 0.3, 1],
+            }}
+          >
+            extraordinary.
+          </motion.span>
+        </h2>
+
+        {/* Accent underline */}
+        <motion.div
+          className="h-[2px] bg-[var(--color-accent)] mx-auto mt-6"
+          initial={{ scaleX: 0, width: 80 }}
+          whileInView={{ scaleX: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          style={{ originX: 0 }}
+          aria-hidden="true"
+        />
+
+        <div className="mt-12">
+          <MagneticButton onClick={() => navigate('/about')}>
+            Get in touch
+          </MagneticButton>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+/* ─── Main Cinematic Page ─── */
+export default function Cinematic() {
+  const heroRef = useRef<HTMLDivElement>(null)
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ['start start', 'end start'],
+  })
+
+  const heroY = useTransform(scrollYProgress, [0, 1], [0, -120])
+  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.92])
+  const heroBlur = useTransform(scrollYProgress, [0, 1], [0, 12])
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0])
+  const taglineY = useTransform(scrollYProgress, [0, 1], [0, -60])
+  const spotlightScale = useTransform(scrollYProgress, [0, 0.5], [1, 1.5])
+  const spotlightOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0])
+
+  return (
+    <PageTransition>
+      <ScrollCounter />
+
+      {/* ─── Scene 1: Hero ─── */}
+      <section ref={heroRef} className="relative h-[200vh]">
+        <div className="sticky top-0 h-screen flex flex-col items-center justify-center overflow-hidden">
+          {/* Radial spotlight */}
+          <motion.div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background:
+                'radial-gradient(ellipse 60% 50% at 50% 45%, var(--color-accent-glow), transparent 70%)',
+              scale: spotlightScale,
+              opacity: spotlightOpacity,
+            }}
+            aria-hidden="true"
+          />
+
+          {/* Hero content */}
+          <div className="relative z-10 text-center">
+            <div className="relative">
+              <AvailableBadge />
+              <motion.div
+                style={{
+                  y: heroY,
+                  scale: heroScale,
+                  filter: heroBlur.get() > 0 ? `blur(${heroBlur.get()}px)` : undefined,
+                  opacity: heroOpacity,
+                }}
+              >
+                <AnimatedName />
+              </motion.div>
+            </div>
+
+            {/* Tagline */}
+            <motion.div
+              className="mt-8"
+              style={{ y: taglineY }}
+            >
+              <ScrambleText
+                text="Mobile & Backend Engineer"
+                delay={1200}
+                className="font-[family-name:var(--font-mono)] text-xs md:text-sm uppercase tracking-[0.4em] text-[#71717A]"
+              />
+              <motion.div
+                className="h-[1px] w-4 bg-[var(--color-accent)] mx-auto mt-4"
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{ duration: 0.6, delay: 1.8, ease: [0.16, 1, 0.3, 1] }}
+                style={{ originX: 0 }}
+                aria-hidden="true"
+              />
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── Scene 2: About Teaser ─── */}
+      <AboutTeaser />
+
+      {/* ─── Scene 3: Stacked Peel Gallery ─── */}
+      <PeelGallery />
+
+      {/* ─── Scene 4: CTA ─── */}
+      <CTASection />
+
+      {/* Bottom spacer for nav pill */}
+      <div className="h-24" aria-hidden="true" />
+    </PageTransition>
+  )
+}
