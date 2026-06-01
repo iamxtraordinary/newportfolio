@@ -28,9 +28,9 @@ export function PeelCard({ project, index, total }: PeelCardProps) {
 
   return (
     <>
-      <motion.div
-        ref={ref}
-        className="sticky top-0 h-screen w-full flex items-center justify-center px-4 md:px-8"
+      <div ref={ref} className="h-[150vh] w-full relative">
+        <motion.div
+          className="sticky top-0 h-screen w-full flex items-center justify-center px-4 md:px-8"
         style={{
           scale,
           rotateX,
@@ -112,7 +112,8 @@ export function PeelCard({ project, index, total }: PeelCardProps) {
             </motion.div>
           </motion.div>
         </div>
-      </motion.div>
+        </motion.div>
+      </div>
 
       {/* Modal */}
       {modalOpen && (

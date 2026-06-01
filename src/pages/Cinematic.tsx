@@ -40,41 +40,67 @@ function AnimatedName() {
     ))
 
   return (
-    <h1
-      className="font-[family-name:var(--font-display)] font-bold uppercase leading-[0.8] tracking-tighter text-[16vw] md:text-[12vw] lg:text-[10vw]"
-      aria-label="Emmanuel Okaka"
-    >
-      <span className="block">{renderLetters(firstName, 0)}</span>
-      <span className="block">{renderLetters(lastName, firstName.length)}</span>
-    </h1>
+    <div>
+      <AvailableBadge />
+      <h1
+        className="font-[family-name:var(--font-display)] font-bold uppercase leading-[0.82] tracking-[-0.04em] text-[20vw] text-[var(--color-text)]"
+        aria-label="Emmanuel Okaka"
+      >
+        <span className="block">{renderLetters(firstName, 0)}</span>
+        <span className="block text-center">{renderLetters(lastName, firstName.length)}</span>
+      </h1>
+    </div>
   )
 }
 
+/* ─── Top Status Bar ─── */
+function StatusBar() {
+  return (
+    <motion.div
+      className="absolute top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-10 py-5"
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
+    >
+      <span className="font-[family-name:var(--font-mono)] text-[10px] md:text-xs uppercase tracking-[0.25em] text-[var(--color-muted)]">
+        System Online // v4.2
+      </span>
+      <div className="flex flex-col items-end gap-0.5">
+        <span className="font-[family-name:var(--font-mono)] text-[10px] md:text-xs uppercase tracking-[0.2em] text-[var(--color-muted)]">
+          [01] Cinematic
+        </span>
+        <span className="font-[family-name:var(--font-mono)] text-[10px] md:text-xs uppercase tracking-[0.2em] text-[var(--color-border)]">
+          [02] Intro
+        </span>
+      </div>
+    </motion.div>
+  )
+}
 /* ─── Available Badge ─── */
 function AvailableBadge() {
   return (
     <motion.div
-      className="absolute -top-4 right-[5%] md:right-[10%]"
-      initial={{ scale: 0, rotate: -10 }}
-      animate={{ scale: 1, rotate: -3 }}
+      className="flex justify-center my-3 md:my-4 relative z-20"
+      initial={{ scale: 0, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
       transition={{
         type: 'spring',
         stiffness: 200,
         damping: 20,
-        delay: 1.2,
+        delay: 1.0,
       }}
     >
       <motion.div
-        className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.06] border border-white/[0.1] backdrop-blur-md"
-        animate={{ y: [0, -8, 0], rotate: [0, 4, 0] }}
-        transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+        className="flex items-center gap-2.5 px-5 py-2 rounded-full bg-white/[0.05] border border-white/[0.12] backdrop-blur-md"
+        animate={{ y: [0, -4, 0] }}
+        transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
       >
         <span className="relative flex h-2 w-2">
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
           <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
         </span>
-        <span className="micro-label text-[var(--color-muted)]">
-          Available for work
+        <span className="font-[family-name:var(--font-mono)] text-[10px] md:text-xs uppercase tracking-[0.25em] text-[var(--color-muted)]">
+          Available for Work
         </span>
       </motion.div>
     </motion.div>
@@ -301,7 +327,7 @@ function PeelGallery() {
       ))}
 
       {/* View All Projects button */}
-      <div className="flex justify-center py-24">
+      <div className="relative z-50 bg-[var(--color-bg)] flex justify-center py-32">
         <motion.button
           onClick={() => navigate('/projects')}
           className="group flex items-center gap-3 px-10 py-4 rounded-full border border-[var(--color-border)] hover:border-[var(--color-accent)] transition-colors duration-300"
@@ -403,7 +429,6 @@ export default function Cinematic() {
 
   const heroY = useTransform(scrollYProgress, [0, 1], [0, -120])
   const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.92])
-  const heroBlur = useTransform(scrollYProgress, [0, 1], [0, 12])
   const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0])
   const taglineY = useTransform(scrollYProgress, [0, 1], [0, -60])
   const spotlightScale = useTransform(scrollYProgress, [0, 0.5], [1, 1.5])
@@ -418,7 +443,7 @@ export default function Cinematic() {
         <div className="sticky top-0 h-screen flex flex-col items-center justify-center overflow-hidden">
           {/* Radial spotlight */}
           <motion.div
-            className="absolute inset-0 pointer-events-none"
+            className="absolute inset-0 pointer-events-none z-[1]"
             style={{
               background:
                 'radial-gradient(ellipse 60% 50% at 50% 45%, var(--color-accent-glow), transparent 70%)',
@@ -428,38 +453,38 @@ export default function Cinematic() {
             aria-hidden="true"
           />
 
+          {/* Status bar */}
+          <StatusBar />
+
           {/* Hero content */}
-          <div className="relative z-10 text-center">
-            <div className="relative">
-              <AvailableBadge />
-              <motion.div
-                style={{
-                  y: heroY,
-                  scale: heroScale,
-                  filter: heroBlur.get() > 0 ? `blur(${heroBlur.get()}px)` : undefined,
-                  opacity: heroOpacity,
-                }}
-              >
-                <AnimatedName />
-              </motion.div>
-            </div>
+          <div className="relative z-10 text-center w-full px-4 md:px-8">
+            <motion.div
+              style={{
+                y: heroY,
+                scale: heroScale,
+                opacity: heroOpacity,
+              }}
+            >
+              {/* First name */}
+              <AnimatedName />
+            </motion.div>
 
             {/* Tagline */}
             <motion.div
-              className="mt-8"
+              className="mt-10"
               style={{ y: taglineY }}
             >
               <ScrambleText
                 text="Mobile & Backend Engineer"
                 delay={1200}
-                className="font-[family-name:var(--font-mono)] text-xs md:text-sm uppercase tracking-[0.4em] text-[#71717A]"
+                className="font-[family-name:var(--font-mono)] text-[10px] md:text-sm uppercase tracking-[0.4em] text-[var(--color-muted)]"
               />
               <motion.div
-                className="h-[1px] w-4 bg-[var(--color-accent)] mx-auto mt-4"
+                className="h-[1px] w-8 bg-[var(--color-accent)] mx-auto mt-5"
                 initial={{ scaleX: 0 }}
                 animate={{ scaleX: 1 }}
                 transition={{ duration: 0.6, delay: 1.8, ease: [0.16, 1, 0.3, 1] }}
-                style={{ originX: 0 }}
+                style={{ originX: 0.5 }}
                 aria-hidden="true"
               />
             </motion.div>
