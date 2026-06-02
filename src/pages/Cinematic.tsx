@@ -293,30 +293,33 @@ function SelectedWork() {
   const navigate = useNavigate()
 
   return (
-    <section className="relative flex flex-col -mt-20">
+    <section className="relative">
       {projects.map((project, i) => (
         <ContainerScroll
           key={project.id}
+          index={i + 1}
           titleComponent={
             i === 0 ? (
-              <>
-                <div className="flex items-center justify-center gap-4 mb-6">
-                  <span className="font-[family-name:var(--font-display)] text-sm uppercase tracking-wider text-[var(--color-muted)]">
+              <div className="mb-8 md:mb-12">
+                <div className="flex items-center justify-center gap-4 mb-4 md:mb-6">
+                  <span className="font-[family-name:var(--font-display)] text-xs md:text-sm uppercase tracking-wider text-[var(--color-muted)]">
                     Selected Work
                   </span>
-                  <div className="h-px w-12 bg-[var(--color-border)]" aria-hidden="true" />
-                  <span className="font-[family-name:var(--font-mono)] text-[10px] px-3 py-1 rounded-full bg-[var(--color-accent)]/10 text-[var(--color-accent)] uppercase tracking-widest">
+                  <div className="h-px w-8 md:w-12 bg-[var(--color-border)]" aria-hidden="true" />
+                  <span className="font-[family-name:var(--font-mono)] text-[9px] md:text-[10px] px-3 py-1 rounded-full bg-[var(--color-accent)]/10 text-[var(--color-accent)] uppercase tracking-widest">
                     {projects.length}
                   </span>
                 </div>
-                <h2 className="font-[family-name:var(--font-display)] text-4xl md:text-[4rem] font-bold uppercase tracking-tight leading-none text-[var(--color-text)]">
+                <h2 className="font-[family-name:var(--font-display)] text-3xl md:text-[4rem] font-bold uppercase tracking-tight leading-none text-[var(--color-text)]">
                   Featured Projects
                 </h2>
-              </>
+              </div>
             ) : (
-              <h2 className="font-[family-name:var(--font-display)] text-3xl md:text-[3rem] font-bold uppercase tracking-tight leading-none text-[var(--color-text)]/50">
-                {project.title}
-              </h2>
+              <div className="mb-8 md:mb-12">
+                <h2 className="font-[family-name:var(--font-display)] text-3xl md:text-[4rem] font-bold uppercase tracking-tight leading-none text-[var(--color-text)]/30">
+                  {project.title}
+                </h2>
+              </div>
             )
           }
         >

@@ -10,14 +10,20 @@ import {
 export function ContainerScroll({
   titleComponent,
   children,
+  index = 0,
 }: {
   titleComponent: string | React.ReactNode
   children: React.ReactNode
+  index?: number
 }) {
   const containerRef = useRef<HTMLDivElement>(null)
+  
+  // Track this element as its top edge moves from the bottom of the viewport to the top of the viewport
   const { scrollYProgress } = useScroll({
     target: containerRef,
+    offset: ['start end', 'start start'],
   })
+  
   const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
@@ -27,20 +33,21 @@ export function ContainerScroll({
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
-  const scaleDimensions = isMobile ? [0.7, 0.9] : [1.05, 1]
+  const scaleDimensions = isMobile ? [0.7, 0.95] : [1.05, 1]
 
   const rotate = useTransform(scrollYProgress, [0, 1], [20, 0])
   const scale = useTransform(scrollYProgress, [0, 1], scaleDimensions)
-  const translate = useTransform(scrollYProgress, [0, 1], [0, -100])
+  const translate = useTransform(scrollYProgress, [0, 1], [0, -60])
 
   return (
     <div
-      className="h-[60rem] md:h-[80rem] flex items-center justify-center relative p-2 md:p-20"
+      className="sticky top-0 h-screen w-full flex items-center justify-center p-4 md:p-12 overflow-hidden"
       ref={containerRef}
+      style={{ zIndex: index }}
     >
       <div
-        className="py-10 md:py-40 w-full relative"
-        style={{ perspective: '1000px' }}
+        className="w-full max-w-6xl relative"
+        style={{ perspective: '1200px' }}
       >
         <Header translate={translate} titleComponent={titleComponent} />
         <Card rotate={rotate} translate={translate} scale={scale}>
