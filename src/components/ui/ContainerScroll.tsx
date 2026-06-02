@@ -33,11 +33,14 @@ export function ContainerScroll({
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
-  const scaleDimensions = isMobile ? [0.7, 0.95] : [1.05, 1]
+  // If it's the first container (index === 1), use the original scale and translate values
+  const scaleDimensions = isMobile 
+    ? (index === 1 ? [0.7, 0.9] : [0.7, 0.95]) 
+    : [1.8, 1.2]
 
-  const rotate = useTransform(scrollYProgress, [0, 1], [20, 0])
+  const rotate = useTransform(scrollYProgress, [0, 1], [150, 0])
   const scale = useTransform(scrollYProgress, [0, 1], scaleDimensions)
-  const translate = useTransform(scrollYProgress, [0, 1], [0, -60])
+  const translate = useTransform(scrollYProgress, [0, 1], [0, index === 1 ? -100 : -60])
 
   return (
     <div
