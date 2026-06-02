@@ -319,79 +319,39 @@ function SelectedWork() {
             titleComponent={null}
           
         >
-          {/* ── Dashboard Window Chrome ── */}
-          <div className="h-full flex flex-col">
-            {/* Window title bar */}
-            <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--color-border)]/30">
-              <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-red-400/80" />
-                <span className="w-3 h-3 rounded-full bg-yellow-400/80" />
-                <span className="w-3 h-3 rounded-full bg-green-400/80" />
-              </div>
-              <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-[var(--color-muted)]">
-                {project.title.toLowerCase().replace(/\s+/g, '_')}.exe
-              </span>
-              <div className="w-16" /> {/* spacer for symmetry */}
-            </div>
-
-            {/* Project Content - single item filling the container */}
-            <div className="flex-1 flex flex-col p-3 md:p-4 overflow-y-auto">
-              <motion.div
-                className="group relative flex flex-col h-full rounded-xl overflow-hidden border border-[var(--color-border)]/20 bg-[var(--color-bg)] cursor-pointer"
-                whileHover={{ scale: 1.01 }}
-                whileTap={{ scale: 0.99 }}
-                onClick={() => project.link ? window.open(project.link, '_blank') : navigate('/projects')}
+          {/* ── Cinematic Poster Content ── */}
+          <motion.div
+            className="w-full h-full relative rounded-xl md:rounded-2xl overflow-hidden group cursor-pointer bg-[#050505]"
+            whileHover={{ scale: 1.01 }}
+            whileTap={{ scale: 0.99 }}
+            onClick={() => project.link ? window.open(project.link, '_blank') : navigate('/projects')}
+          >
+            {/* Background Image */}
+            <img
+              src={project.image}
+              alt={project.title}
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 opacity-40 grayscale-[20%]"
+              loading="lazy"
+            />
+            
+            {/* Vignette & Cinematic Overlays (Crushing Shadows) */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black opacity-90 pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-black opacity-70 pointer-events-none" />
+            
+            {/* Centered Typography */}
+            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center p-4 md:p-10 text-center">
+              <motion.h3 
+                className="font-[family-name:var(--font-display)] text-6xl md:text-[9rem] font-bold uppercase tracking-tighter leading-[0.85] text-white drop-shadow-[0_10px_40px_rgba(0,0,0,1)] transition-transform duration-700 group-hover:scale-[1.02]"
               >
-                {/* Project Image (top thumbnail) */}
-                <div className="relative w-full h-48 md:h-72 shrink-0 overflow-hidden">
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-bg)] to-transparent opacity-80" />
-                </div>
-
-                {/* Project Info (bottom) */}
-                <div className="flex-1 flex flex-col justify-center p-4 md:p-6 space-y-3">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <span className="font-[family-name:var(--font-mono)] text-xs text-[var(--color-muted)]/60 tabular-nums">
-                        {String(i + 1).padStart(2, '0')}
-                      </span>
-                      <h3 className="font-[family-name:var(--font-display)] text-lg md:text-xl font-bold uppercase tracking-wider text-[var(--color-text)]">
-                        {project.title}
-                      </h3>
-                    </div>
-                    <ArrowRight
-                      size={18}
-                      className="text-[var(--color-muted)] transition-transform duration-300 group-hover:translate-x-1 group-hover:text-[var(--color-accent)]"
-                    />
-                  </div>
-                  <p className="font-[family-name:var(--font-body)] text-xs md:text-sm text-[var(--color-text)]/70 leading-relaxed max-w-2xl">
-                    {project.description}
-                  </p>
-                  {/* Tech badges + period */}
-                  <div className="flex items-center gap-3 pt-2">
-                    <div className="flex flex-wrap gap-2">
-                      {project.tech.map((t) => (
-                        <span
-                          key={t}
-                          className="font-[family-name:var(--font-mono)] text-[9px] md:text-[10px] uppercase tracking-widest px-2.5 py-1 rounded-full border border-[var(--color-accent)]/20 text-[var(--color-accent)]/70"
-                        >
-                          {t}
-                        </span>
-                      ))}
-                    </div>
-                    <span className="font-[family-name:var(--font-mono)] text-[10px] md:text-xs uppercase tracking-widest text-[var(--color-muted)]/40 ml-auto shrink-0">
-                      {project.period}
-                    </span>
-                  </div>
-                </div>
-              </motion.div>
+                {project.title}
+              </motion.h3>
+              <motion.p 
+                className="font-[family-name:var(--font-display)] text-sm md:text-2xl font-medium uppercase tracking-[0.2em] text-white/80 mt-4 md:mt-6 max-w-3xl drop-shadow-xl"
+              >
+                {project.description}
+              </motion.p>
             </div>
-          </div>
+          </motion.div>
         </ContainerScroll>
       ))}
       </div>
