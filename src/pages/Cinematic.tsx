@@ -294,34 +294,30 @@ function SelectedWork() {
 
   return (
     <section className="relative">
-      {projects.map((project, i) => (
-        <ContainerScroll
-          key={project.id}
-          index={i + 1}
-          titleComponent={
-            i === 0 ? (
-              <div className="mb-8 md:mb-12">
-                <div className="flex items-center justify-center gap-4 mb-4 md:mb-6">
-                  <span className="font-[family-name:var(--font-display)] text-xs md:text-sm uppercase tracking-wider text-[var(--color-muted)]">
-                    Selected Work
-                  </span>
-                  <div className="h-px w-8 md:w-12 bg-[var(--color-border)]" aria-hidden="true" />
-                  <span className="font-[family-name:var(--font-mono)] text-[9px] md:text-[10px] px-3 py-1 rounded-full bg-[var(--color-accent)]/10 text-[var(--color-accent)] uppercase tracking-widest">
-                    {projects.length}
-                  </span>
-                </div>
-                <h2 className="font-[family-name:var(--font-display)] text-3xl md:text-[4rem] font-bold uppercase tracking-tight leading-none text-[var(--color-text)]">
-                  Featured Projects
-                </h2>
-              </div>
-            ) : (
-              <div className="mb-8 md:mb-12">
-                <h2 className="font-[family-name:var(--font-display)] text-3xl md:text-[4rem] font-bold uppercase tracking-tight leading-none text-[var(--color-text)]/30">
-                  {project.title}
-                </h2>
-              </div>
-            )
-          }
+      {/* Global Sticky Header with high z-index to avoid being covered by scaling cards */}
+      <div className="sticky top-8 md:top-12 z-[100] w-full flex flex-col items-center pointer-events-none">
+        <div className="flex items-center justify-center gap-4 mb-4 md:mb-6">
+          <span className="font-[family-name:var(--font-display)] text-xs md:text-sm uppercase tracking-wider text-[var(--color-muted)]">
+            Selected Work
+          </span>
+          <div className="h-px w-8 md:w-12 bg-[var(--color-border)]" aria-hidden="true" />
+          <span className="font-[family-name:var(--font-mono)] text-[9px] md:text-[10px] px-3 py-1 rounded-full bg-[var(--color-accent)]/10 text-[var(--color-accent)] uppercase tracking-widest">
+            {projects.length}
+          </span>
+        </div>
+        <h2 className="font-[family-name:var(--font-display)] text-3xl md:text-[4rem] font-bold uppercase tracking-tight leading-none text-[var(--color-text)] drop-shadow-xl">
+          Featured Projects
+        </h2>
+      </div>
+
+      {/* Projects Container - Pulling it up so it sits under the sticky header nicely */}
+      <div className="relative -mt-[8rem] md:-mt-[10rem]">
+        {projects.map((project, i) => (
+          <ContainerScroll
+            key={project.id}
+            index={i + 1}
+            titleComponent={null}
+          
         >
           {/* ── Dashboard Window Chrome ── */}
           <div className="h-full flex flex-col">
@@ -398,6 +394,7 @@ function SelectedWork() {
           </div>
         </ContainerScroll>
       ))}
+      </div>
 
       {/* View All Projects button */}
       <div className="relative z-50 flex justify-center -mt-40 pb-24">
