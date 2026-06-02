@@ -293,96 +293,108 @@ function SelectedWork() {
   const navigate = useNavigate()
 
   return (
-    <section className="relative">
-      <ContainerScroll
-        titleComponent={
-          <>
-            <div className="flex items-center justify-center gap-4 mb-6">
-              <span className="font-[family-name:var(--font-display)] text-sm uppercase tracking-wider text-[var(--color-muted)]">
-                Selected Work
+    <section className="relative flex flex-col -mt-20">
+      {projects.map((project, i) => (
+        <ContainerScroll
+          key={project.id}
+          titleComponent={
+            i === 0 ? (
+              <>
+                <div className="flex items-center justify-center gap-4 mb-6">
+                  <span className="font-[family-name:var(--font-display)] text-sm uppercase tracking-wider text-[var(--color-muted)]">
+                    Selected Work
+                  </span>
+                  <div className="h-px w-12 bg-[var(--color-border)]" aria-hidden="true" />
+                  <span className="font-[family-name:var(--font-mono)] text-[10px] px-3 py-1 rounded-full bg-[var(--color-accent)]/10 text-[var(--color-accent)] uppercase tracking-widest">
+                    {projects.length}
+                  </span>
+                </div>
+                <h2 className="font-[family-name:var(--font-display)] text-4xl md:text-[4rem] font-bold uppercase tracking-tight leading-none text-[var(--color-text)]">
+                  Featured Projects
+                </h2>
+              </>
+            ) : (
+              <h2 className="font-[family-name:var(--font-display)] text-3xl md:text-[3rem] font-bold uppercase tracking-tight leading-none text-[var(--color-text)]/50">
+                {project.title}
+              </h2>
+            )
+          }
+        >
+          {/* ── Dashboard Window Chrome ── */}
+          <div className="h-full flex flex-col">
+            {/* Window title bar */}
+            <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--color-border)]/30">
+              <div className="flex items-center gap-2">
+                <span className="w-3 h-3 rounded-full bg-red-400/80" />
+                <span className="w-3 h-3 rounded-full bg-yellow-400/80" />
+                <span className="w-3 h-3 rounded-full bg-green-400/80" />
+              </div>
+              <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-[var(--color-muted)]">
+                {project.title.toLowerCase().replace(/\s+/g, '_')}.exe
               </span>
-              <div className="h-px w-12 bg-[var(--color-border)]" aria-hidden="true" />
-              <span className="font-[family-name:var(--font-mono)] text-[10px] px-3 py-1 rounded-full bg-[var(--color-accent)]/10 text-[var(--color-accent)] uppercase tracking-widest">
-                {projects.length}
-              </span>
+              <div className="w-16" /> {/* spacer for symmetry */}
             </div>
-            <h2 className="font-[family-name:var(--font-display)] text-4xl md:text-[4rem] font-bold uppercase tracking-tight leading-none text-[var(--color-text)]">
-              Projects
-            </h2>
-          </>
-        }
-      >
-        {/* ── Dashboard Window Chrome ── */}
-        <div className="h-full flex flex-col">
-          {/* Window title bar */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--color-border)]/30">
-            <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-red-400/80" />
-              <span className="w-3 h-3 rounded-full bg-yellow-400/80" />
-              <span className="w-3 h-3 rounded-full bg-green-400/80" />
-            </div>
-            <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-widest text-[var(--color-muted)]">
-              projects_explorer.exe
-            </span>
-            <div className="w-16" /> {/* spacer for symmetry */}
-          </div>
 
-          {/* 2×2 Project Grid */}
-          <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 p-3 md:p-4 overflow-y-auto">
-            {projects.map((project) => (
+            {/* Project Content - single item filling the container */}
+            <div className="flex-1 flex flex-col p-3 md:p-4 overflow-y-auto">
               <motion.div
-                key={project.id}
-                className="group relative rounded-xl overflow-hidden border border-[var(--color-border)]/20 bg-[var(--color-bg)] cursor-pointer"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+                className="group relative flex flex-col h-full rounded-xl overflow-hidden border border-[var(--color-border)]/20 bg-[var(--color-bg)] cursor-pointer"
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.99 }}
                 onClick={() => project.link ? window.open(project.link, '_blank') : navigate('/projects')}
               >
-                {/* Project Image */}
-                <div className="relative h-28 md:h-40 overflow-hidden">
+                {/* Project Image (top thumbnail) */}
+                <div className="relative w-full h-48 md:h-72 shrink-0 overflow-hidden">
                   <img
                     src={project.image}
                     alt={project.title}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     loading="lazy"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-bg)] via-transparent to-transparent opacity-60" />
-                  {/* Period badge */}
-                  <span className="absolute top-2 right-2 font-[family-name:var(--font-mono)] text-[9px] md:text-[10px] uppercase tracking-widest px-2 py-1 rounded-full bg-black/50 text-[var(--color-muted)] backdrop-blur-sm">
-                    {project.period}
-                  </span>
+                  <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-bg)] to-transparent opacity-80" />
                 </div>
 
-                {/* Project Info */}
-                <div className="p-3 md:p-4 space-y-2">
+                {/* Project Info (bottom) */}
+                <div className="flex-1 flex flex-col justify-center p-4 md:p-6 space-y-3">
                   <div className="flex items-center justify-between">
-                    <h3 className="font-[family-name:var(--font-display)] text-sm md:text-base font-bold uppercase tracking-wider text-[var(--color-text)]">
-                      {project.title}
-                    </h3>
+                    <div className="flex items-center gap-3">
+                      <span className="font-[family-name:var(--font-mono)] text-xs text-[var(--color-muted)]/60 tabular-nums">
+                        {String(i + 1).padStart(2, '0')}
+                      </span>
+                      <h3 className="font-[family-name:var(--font-display)] text-lg md:text-xl font-bold uppercase tracking-wider text-[var(--color-text)]">
+                        {project.title}
+                      </h3>
+                    </div>
                     <ArrowRight
-                      size={14}
+                      size={18}
                       className="text-[var(--color-muted)] transition-transform duration-300 group-hover:translate-x-1 group-hover:text-[var(--color-accent)]"
                     />
                   </div>
-                  <p className="font-[family-name:var(--font-body)] text-[11px] md:text-xs text-[var(--color-text)]/50 leading-relaxed line-clamp-2">
+                  <p className="font-[family-name:var(--font-body)] text-xs md:text-sm text-[var(--color-text)]/70 leading-relaxed max-w-2xl">
                     {project.description}
                   </p>
-                  {/* Tech badges */}
-                  <div className="flex flex-wrap gap-1.5 pt-1">
-                    {project.tech.map((t) => (
-                      <span
-                        key={t}
-                        className="font-[family-name:var(--font-mono)] text-[8px] md:text-[9px] uppercase tracking-widest px-2 py-0.5 rounded-full border border-[var(--color-accent)]/20 text-[var(--color-accent)]/70"
-                      >
-                        {t}
-                      </span>
-                    ))}
+                  {/* Tech badges + period */}
+                  <div className="flex items-center gap-3 pt-2">
+                    <div className="flex flex-wrap gap-2">
+                      {project.tech.map((t) => (
+                        <span
+                          key={t}
+                          className="font-[family-name:var(--font-mono)] text-[9px] md:text-[10px] uppercase tracking-widest px-2.5 py-1 rounded-full border border-[var(--color-accent)]/20 text-[var(--color-accent)]/70"
+                        >
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                    <span className="font-[family-name:var(--font-mono)] text-[10px] md:text-xs uppercase tracking-widest text-[var(--color-muted)]/40 ml-auto shrink-0">
+                      {project.period}
+                    </span>
                   </div>
                 </div>
               </motion.div>
-            ))}
+            </div>
           </div>
-        </div>
-      </ContainerScroll>
+        </ContainerScroll>
+      ))}
 
       {/* View All Projects button */}
       <div className="relative z-50 flex justify-center -mt-40 pb-24">
