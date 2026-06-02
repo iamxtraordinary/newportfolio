@@ -145,36 +145,37 @@ function AboutTeaser() {
 
   return (
     <section className="relative py-24 md:py-32 px-8 md:px-16 max-w-7xl mx-auto">
-      <div className="grid grid-cols-1 md:grid-cols-[1fr_1.4fr] gap-16 md:gap-12 items-center">
+      <div className="flex flex-col md:flex-row gap-16 md:gap-20 items-center justify-between">
         {/* Left: Text */}
         <motion.div
+          className="w-full md:w-[45%] space-y-8"
           initial={{ opacity: 0, x: -40 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
-          <h2 className="font-[family-name:var(--font-display)] text-5xl md:text-6xl font-bold uppercase tracking-tight mb-6 text-[#C8B88A]">
+          <h2 className="font-[family-name:var(--font-display)] text-5xl md:text-6xl font-bold uppercase tracking-tight text-[var(--color-text)]">
             Hello there
             <motion.span
-              className="inline-block w-3 h-3 bg-[var(--color-accent)] rounded-full ml-2 align-middle"
+              className="inline-block w-3 h-3 bg-[var(--color-accent)] rounded-full ml-3 align-middle"
               animate={{ opacity: [1, 0.3, 1] }}
               transition={{ duration: 2, repeat: Infinity }}
               aria-hidden="true"
             />
           </h2>
-          <p className="text-lg text-[var(--color-muted)] leading-relaxed mb-10 max-w-lg">
+          <p className="font-[family-name:var(--font-body)] text-base md:text-lg text-[var(--color-text)]/70 leading-relaxed max-w-lg">
             I'm Emmanuel, a software developer passionate about crafting
             meaningful and impactful services. Let's work together.
           </p>
 
           {/* Stats */}
-          <div className="flex gap-8 mb-10">
+          <div className="flex gap-10 md:gap-14">
             {stats.map((stat) => (
               <div key={stat.label}>
-                <span className="font-[family-name:var(--font-display)] text-3xl md:text-4xl font-bold text-[var(--color-accent)]">
+                <span className="font-[family-name:var(--font-display)] text-4xl md:text-5xl font-bold text-[var(--color-accent)]">
                   {stat.value}
                 </span>
-                <span className="block micro-label text-[var(--color-muted)] mt-1 max-w-[80px]">
+                <span className="block font-[family-name:var(--font-mono)] text-[10px] md:text-xs uppercase tracking-widest text-[var(--color-text)]/50 mt-2 max-w-[120px]">
                   {stat.label}
                 </span>
               </div>
@@ -183,7 +184,7 @@ function AboutTeaser() {
 
           <motion.button
             onClick={() => navigate('/about')}
-            className="px-8 py-3 rounded-full border border-[var(--color-accent)] text-[var(--color-accent)] micro-label hover:bg-[var(--color-accent)] hover:text-[var(--color-bg)] transition-all duration-300"
+            className="px-8 py-3 rounded-full border border-[var(--color-accent)] text-[var(--color-accent)] font-[family-name:var(--font-mono)] text-xs font-bold uppercase tracking-widest hover:bg-[var(--color-accent)] hover:text-white transition-all duration-300"
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
           >
@@ -193,7 +194,7 @@ function AboutTeaser() {
 
         {/* Right: Portrait Card & Photo Stack */}
         <motion.div
-          className="relative flex justify-end items-center min-h-[400px] md:min-h-[520px]"
+          className="relative flex justify-end items-center min-h-[400px] md:min-h-[520px] w-full md:w-[50%]"
           initial={{ opacity: 0, x: 40 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, margin: '-100px' }}
