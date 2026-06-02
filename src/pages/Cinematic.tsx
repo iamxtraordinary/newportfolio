@@ -205,14 +205,14 @@ function AboutTeaser() {
               <motion.div
                 className="absolute z-[5] rounded-[1.5rem] overflow-hidden w-44 md:w-56 aspect-[3/4] shadow-2xl cursor-grab active:cursor-grabbing"
                 initial={{ x: 0, y: 0, rotate: 0, scale: 0.8, opacity: 0 }}
-                animate={{ x: -280, y: -40, rotate: -12, scale: 0.85, opacity: 1 }}
+                animate={{ x: -390, y: -40, rotate: -12, scale: 1.1, opacity: 1 }}
                 exit={{ x: 0, y: 0, rotate: 0, scale: 0.8, opacity: 0 }}
                 transition={{ type: 'spring', stiffness: 200, damping: 22, delay: 0.05 }}
                 drag
                 dragMomentum={true}
                 dragElastic={0.6}
-                whileHover={{ scale: 0.9 }}
-                whileDrag={{ scale: 1.0, rotate: 0, zIndex: 100 }}
+                whileHover={{ scale: 1.2 }}
+                whileDrag={{ scale: 1.5, rotate: 0, zIndex: 100 }}
               >
                 <img
                   src="/dangote.webp"
@@ -229,14 +229,14 @@ function AboutTeaser() {
               <motion.div
                 className="absolute z-[5] rounded-[1.5rem] overflow-hidden w-44 md:w-56 aspect-[3/4] shadow-2xl cursor-grab active:cursor-grabbing"
                 initial={{ x: 0, y: 0, rotate: 0, scale: 0.8, opacity: 0 }}
-                animate={{ x: 60, y: 80, rotate: 10, scale: 0.85, opacity: 1 }}
+                animate={{ x: 190, y: 80, rotate: 10, scale: 1.1, opacity: 1 }}
                 exit={{ x: 0, y: 0, rotate: 0, scale: 0.8, opacity: 0 }}
                 transition={{ type: 'spring', stiffness: 200, damping: 22, delay: 0.1 }}
                 drag
                 dragMomentum={true}
                 dragElastic={0.6}
-                whileHover={{ scale: 0.9 }}
-                whileDrag={{ scale: 1.0, rotate: 0, zIndex: 100 }}
+                whileHover={{ scale: 1.2 }}
+                whileDrag={{ scale: 1.5, rotate: 0, zIndex: 100 }}
               >
                 <img
                   src="/car.webp"
