@@ -1,4 +1,10 @@
-import React, { useRef, useEffect, useState } from 'react'
+import React, {
+  useRef,
+  useEffect,
+  useLayoutEffect,
+  useState,
+} from 'react'
+
 import {
   useScroll,
   useTransform,
@@ -6,7 +12,32 @@ import {
   type MotionValue,
 } from 'motion/react'
 
-/* ─── Main Container ─── */
+/* ------------------------------------------------ */
+/* Media Query Hook */
+/* ------------------------------------------------ */
+
+function useMediaQuery(query: string) {
+  const [matches, setMatches] = useState(false)
+
+  useEffect(() => {
+    const media = window.matchMedia(query)
+
+    const update = () => setMatches(media.matches)
+
+    update()
+
+    media.addEventListener('change', update)
+
+    return () => media.removeEventListener('change', update)
+  }, [query])
+
+  return matches
+}
+
+/* ------------------------------------------------ */
+/* Main Container */
+/* ------------------------------------------------ */
+
 export function ContainerScroll({
   titleComponent,
   children,
@@ -17,43 +48,118 @@ export function ContainerScroll({
   index?: number
 }) {
   const containerRef = useRef<HTMLDivElement>(null)
-  
-  // Track this element as its top edge moves from the bottom of the viewport to the top of the viewport
-  const { scrollYProgress } = useScroll({
+
+  const isMobile = useMediaQuery('(max-width: 768px)')
+
+  const { scrollYProgress: entranceProgress } = useScroll({
     target: containerRef,
     offset: ['start end', 'start start'],
   })
-  
-  const [isMobile, setIsMobile] = useState(false)
 
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth <= 768)
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    return () => window.removeEventListener('resize', checkMobile)
+  const { scrollY } = useScroll()
+
+  const [metrics, setMetrics] = useState({
+    docTop: 0,
+    vh: 0,
+  })
+
+  useLayoutEffect(() => {
+    const updateMetrics = () => {
+      if (!containerRef.current) return
+
+      const rect = containerRef.current.getBoundingClientRect()
+
+      setMetrics({
+        docTop: rect.top + window.scrollY,
+        vh: window.innerHeight,
+      })
+    }
+
+    updateMetrics()
+
+    window.addEventListener('resize', updateMetrics)
+
+    return () => {
+      window.removeEventListener('resize', updateMetrics)
+    }
   }, [])
 
-  // If it's the first container (index === 1), use the original scale and translate values
-  const scaleDimensions = isMobile 
-    ? (index === 1 ? [0.7, 0.9] : [0.7, 0.95]) 
+  /* ---------------- Entrance ---------------- */
+
+  const entranceScaleRange = isMobile
+    ? index === 1
+      ? [0.7, 0.9]
+      : [0.7, 0.95]
     : [1.8, 1.2]
 
-  const rotate = useTransform(scrollYProgress, [0, 1], [150, 0])
-  const scale = useTransform(scrollYProgress, [0, 1], scaleDimensions)
-  const translate = useTransform(scrollYProgress, [0, 1], [0, index === 1 ? -100 : -60])
+  const rotate = useTransform(
+    entranceProgress,
+    [0, 1],
+    [120, 0]
+  )
+
+  const entranceScale = useTransform(
+    entranceProgress,
+    [0, 1],
+    entranceScaleRange
+  )
+
+  const translate = useTransform(
+    entranceProgress,
+    [0, 1],
+    [0, index === 1 ? -100 : -60]
+  )
+
+  /* ---------------- Exit ---------------- */
+
+  const exitScale = useTransform(scrollY, latest => {
+    const { docTop, vh } = metrics
+
+    if (!vh) return 1
+
+    if (latest <= docTop) {
+      return 1
+    }
+
+    const progress = Math.min(
+      (latest - docTop) / vh,
+      1
+    )
+
+    // 1 -> 0.5
+    return 1 - progress * 0.5
+  })
+
+  /* ---------------- Combined Scale ---------------- */
+
+  const scale = useTransform(
+    [entranceScale, exitScale],
+    ([entrance, exit]: number[]) => entrance * exit
+  )
 
   return (
     <div
-      className="sticky top-0 h-screen w-full flex items-center justify-center p-4 md:p-12 overflow-hidden"
       ref={containerRef}
-      style={{ zIndex: index }}
+      className="sticky top-0 h-screen w-full flex items-center justify-center p-4 md:p-12 overflow-hidden"
+      style={{
+        zIndex: index,
+      }}
     >
       <div
         className="w-full max-w-6xl relative"
-        style={{ perspective: '1200px' }}
+        style={{
+          perspective: '1200px',
+        }}
       >
-        <Header translate={translate} titleComponent={titleComponent} />
-        <Card rotate={rotate} translate={translate} scale={scale}>
+        <Header
+          translate={translate}
+          titleComponent={titleComponent}
+        />
+
+        <Card
+          rotate={rotate}
+          scale={scale}
+        >
           {children}
         </Card>
       </div>
@@ -61,7 +167,10 @@ export function ContainerScroll({
   )
 }
 
-/* ─── Header (title floats up on scroll) ─── */
+/* ------------------------------------------------ */
+/* Header */
+/* ------------------------------------------------ */
+
 function Header({
   translate,
   titleComponent,
@@ -71,7 +180,9 @@ function Header({
 }) {
   return (
     <motion.div
-      style={{ translateY: translate }}
+      style={{
+        translateY: translate,
+      }}
       className="max-w-5xl mx-auto text-center"
     >
       {titleComponent}
@@ -79,7 +190,10 @@ function Header({
   )
 }
 
-/* ─── 3-D Rotating Card ─── */
+/* ------------------------------------------------ */
+/* Card */
+/* ------------------------------------------------ */
+
 function Card({
   rotate,
   scale,
@@ -87,7 +201,6 @@ function Card({
 }: {
   rotate: MotionValue<number>
   scale: MotionValue<number>
-  translate: MotionValue<number>
   children: React.ReactNode
 }) {
   return (
@@ -95,6 +208,11 @@ function Card({
       style={{
         rotateX: rotate,
         scale,
+
+        willChange: 'transform',
+        transform: 'translateZ(0)',
+        backfaceVisibility: 'hidden',
+
         boxShadow:
           '0 0 #0000004d, 0 9px 20px #0000004a, 0 37px 37px #00000042, 0 84px 50px #00000026, 0 149px 60px #0000000a, 0 233px 65px #00000003',
       }}

@@ -341,12 +341,12 @@ function SelectedWork() {
             {/* Centered Typography */}
             <div className="absolute inset-0 z-10 flex flex-col items-center justify-center p-4 md:p-10 text-center">
               <motion.h3 
-                className="font-[family-name:var(--font-display)] text-6xl md:text-[9rem] font-bold uppercase tracking-tighter leading-[0.85] text-white drop-shadow-[0_10px_40px_rgba(0,0,0,1)] transition-transform duration-700 group-hover:scale-[1.02]"
+                className="font-[family-name:var(--font-display)] text-6xl md:text-[7.5rem] font-bold uppercase tracking-tighter leading-[0.85] text-white drop-shadow-[0_10px_40px_rgba(0,0,0,1)] transition-transform duration-700 group-hover:scale-[1.02]"
               >
                 {project.title}
               </motion.h3>
               <motion.p 
-                className="font-[family-name:var(--font-display)] text-sm md:text-2xl font-medium uppercase tracking-[0.2em] text-white/80 mt-4 md:mt-6 max-w-3xl drop-shadow-xl"
+                className="font-[family-name:var(--font-display)] text-sm md:text-[1rem] font-medium uppercase tracking-[0.2em] text-white/80 mt-4 md:mt-6 max-w-3xl drop-shadow-xl"
               >
                 {project.description}
               </motion.p>
