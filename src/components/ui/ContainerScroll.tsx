@@ -1,6 +1,5 @@
 import React, {
   useRef,
-  useEffect,
   useLayoutEffect,
   useState,
 } from 'react'
@@ -12,27 +11,7 @@ import {
   type MotionValue,
 } from 'motion/react'
 
-/* ------------------------------------------------ */
-/* Media Query Hook */
-/* ------------------------------------------------ */
-
-function useMediaQuery(query: string) {
-  const [matches, setMatches] = useState(false)
-
-  useEffect(() => {
-    const media = window.matchMedia(query)
-
-    const update = () => setMatches(media.matches)
-
-    update()
-
-    media.addEventListener('change', update)
-
-    return () => media.removeEventListener('change', update)
-  }, [query])
-
-  return matches
-}
+import { useMediaQuery } from '../../hooks/useMediaQuery'
 
 /* ------------------------------------------------ */
 /* Main Container */

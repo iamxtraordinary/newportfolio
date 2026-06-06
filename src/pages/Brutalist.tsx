@@ -4,6 +4,9 @@ import { MapPin, Smile } from 'lucide-react'
 import { PageTransition } from '../components/layout/PageTransition'
 import { DraggableSticker } from '../components/shared/DraggableSticker'
 import { Win95Popup } from '../components/shared/Win95Popup'
+import { gallery } from '../data/gallery'
+import { contacts } from '../data/contacts'
+import { education, experience } from '../data/resume'
 
 export default function Brutalist() {
   const [win95Open, setWin95Open] = useState(false)
@@ -11,20 +14,6 @@ export default function Brutalist() {
 
   // Determine background color based on photo hover state
   const bgColor = hoveredPhoto ? 'var(--color-border)' : 'var(--color-bg)'
-
-  const gallery = [
-    { id: '01', src: '/graduation.webp', alt: 'Graduation' },
-    { id: '02', src: '/nysc.webp', alt: 'NYSC' },
-    { id: '03', src: '/swag.webp', alt: 'Swag' },
-    { id: '04', src: '/fumble.webp', alt: 'Fumble' },
-  ]
-
-  const contacts = [
-    { name: 'GitHub', url: 'https://github.com/iamxtraordinary', hoverColor: '#FF00FF' },
-    { name: 'LinkedIn', url: 'https://www.linkedin.com/in/okaka-emmanuel', hoverColor: '#00FFFF' },
-    { name: 'Email', url: 'mailto:emmaokaka123@gmail.com', hoverColor: '#FFFF00' },
-    { name: 'WhatsApp', url: 'https://wa.me/2349014771232', hoverColor: '#FF3300' },
-  ]
 
   return (
     <PageTransition>
@@ -178,18 +167,20 @@ export default function Brutalist() {
                 <h2 className="font-[family-name:var(--font-display)] text-4xl font-black uppercase tracking-tight mb-8">
                   Education
                 </h2>
-                <div className="bg-[var(--color-bg)] border-4 border-[var(--color-text)] p-6 shadow-[8px_8px_0px_0px_var(--color-text)]">
-                  <div className="mb-4">
-                    <span className="bg-[#FFFF00] text-black text-xs font-bold px-2 py-1 border border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] inline-block">
-                      SECOND CLASS UPPER HONOURS
-                    </span>
+                {education.map((edu) => (
+                  <div key={edu.degree} className="bg-[var(--color-bg)] border-4 border-[var(--color-text)] p-6 shadow-[8px_8px_0px_0px_var(--color-text)]">
+                    <div className="mb-4">
+                      <span className="bg-[#FFFF00] text-black text-xs font-bold px-2 py-1 border border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] inline-block">
+                        {edu.honours}
+                      </span>
+                    </div>
+                    <h3 className="font-bold text-xl mb-2 text-white">{edu.degree}</h3>
+                    <p className="text-[var(--color-muted)] mb-4">{edu.institution}</p>
+                    <div className="border-t-2 border-dashed border-[var(--color-border)] pt-4 text-sm text-[var(--color-accent)] font-bold">
+                      {edu.period}
+                    </div>
                   </div>
-                  <h3 className="font-bold text-xl mb-2 text-white">Computer Science — BSc.</h3>
-                  <p className="text-[var(--color-muted)] mb-4">Covenant University, Ogun State, Nigeria</p>
-                  <div className="border-t-2 border-dashed border-[var(--color-border)] pt-4 text-sm text-[var(--color-accent)] font-bold">
-                    Nov 2021 — Jul 2025
-                  </div>
-                </div>
+                ))}
               </div>
 
               {/* Experience */}
@@ -198,29 +189,14 @@ export default function Brutalist() {
                   Experience
                 </h2>
                 <div className="space-y-6 border-l-4 border-[var(--color-text)] pl-6 relative">
-                  {/* Item 1 */}
-                  <div className="relative">
-                    <div className="absolute w-4 h-4 bg-[#00FFFF] border-2 border-black -left-[34px] top-1" />
-                    <h3 className="font-bold text-lg text-white">Software Engineer (Contract)</h3>
-                    <p className="text-[var(--color-muted)] text-sm my-1">Real-time dating app · Flutter</p>
-                    <p className="text-xs text-[var(--color-accent)] font-bold">Apr 2025 — Aug 2025</p>
-                  </div>
-                  
-                  {/* Item 2 */}
-                  <div className="relative">
-                    <div className="absolute w-4 h-4 bg-[#FF00FF] border-2 border-black -left-[34px] top-1" />
-                    <h3 className="font-bold text-lg text-white">Mobile Developer Intern</h3>
-                    <p className="text-[var(--color-muted)] text-sm my-1">Inmotion Software Hub</p>
-                    <p className="text-xs text-[var(--color-accent)] font-bold">Mar 2024 — Sep 2024</p>
-                  </div>
-
-                  {/* Item 3 */}
-                  <div className="relative">
-                    <div className="absolute w-4 h-4 bg-[#FFFF00] border-2 border-black -left-[34px] top-1" />
-                    <h3 className="font-bold text-lg text-white">Personal Project</h3>
-                    <p className="text-[var(--color-muted)] text-sm my-1">Inventory Management System</p>
-                    <p className="text-xs text-[var(--color-accent)] font-bold">Jun 2024 — Nov 2024</p>
-                  </div>
+                  {experience.map((exp) => (
+                    <div key={exp.title} className="relative">
+                      <div className="absolute w-4 h-4 border-2 border-black -left-[34px] top-1" style={{ backgroundColor: exp.color }} />
+                      <h3 className="font-bold text-lg text-white">{exp.title}</h3>
+                      <p className="text-[var(--color-muted)] text-sm my-1">{exp.description}</p>
+                      <p className="text-xs text-[var(--color-accent)] font-bold">{exp.period}</p>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
