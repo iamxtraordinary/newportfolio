@@ -6,7 +6,6 @@ import { FloatingNav } from './components/nav/FloatingNav'
 const Cinematic = lazy(() => import('./pages/Cinematic'))
 const Bento = lazy(() => import('./pages/Bento'))
 const Brutalist = lazy(() => import('./pages/Brutalist'))
-const NotFound = lazy(() => import('./pages/NotFound'))
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -37,7 +36,6 @@ export default function App() {
             <Route path="/" element={<Cinematic />} />
             <Route path="/projects" element={<Bento />} />
             <Route path="/about" element={<Brutalist />} />
-            <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
       </AnimatePresence>
