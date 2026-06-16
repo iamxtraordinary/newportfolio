@@ -17,6 +17,7 @@ import { ContainerScroll } from '../components/ui/ContainerScroll'
 import { ScrollPerspectiveText } from '../components/ui/ScrollPerspectiveText'
 import { PageTransition } from '../components/layout/PageTransition'
 import { ShaderAnimation } from '../components/ui/shader-animation'
+import { Silk } from '../components/ui/Silk'
 
 /* ─── Hero Name Letter Animation ─── */
 function AnimatedName() {
@@ -437,6 +438,18 @@ export default function Cinematic() {
   return (
     <PageTransition>
       <ScrollCounter />
+
+      {/* Global Silk Background */}
+      <div className="fixed inset-0 -z-10 pointer-events-none">
+        <Silk
+          speed={5}
+          scale={1.6}
+          color="#0D1B2A"
+          bgColor="#120F17"
+          noiseIntensity={1.5}
+          rotation={0}
+        />
+      </div>
 
       {/* ─── Scene 1: Hero ─── */}
       <section ref={heroRef} className="relative h-[130vh]">
