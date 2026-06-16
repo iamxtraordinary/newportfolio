@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence } from 'motion/react'
+import { ReactLenis } from 'lenis/react'
 import { FloatingNav } from './components/nav/FloatingNav'
 
 const Cinematic = lazy(() => import('./pages/Cinematic'))
@@ -19,7 +20,7 @@ export default function App() {
   const location = useLocation()
 
   return (
-    <>
+    <ReactLenis root>
       <ScrollToTop />
       <FloatingNav />
       <AnimatePresence mode="wait">
@@ -39,6 +40,6 @@ export default function App() {
           </Routes>
         </Suspense>
       </AnimatePresence>
-    </>
+    </ReactLenis>
   )
 }
